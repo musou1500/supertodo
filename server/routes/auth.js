@@ -10,10 +10,10 @@ const comparePassword = util.promisify(bcrypt.compare);
 
 router.post("/signup", async (req, res) => {
   const saltRounds = parseInt(process.env.SALT_ROUNDS);
-  const password = bcrypt.hash(req.body.password, saltRounds);
+  const password = await hashPassword(req.body.password, saltRounds);
   const user = await models.User.create({
     name: req.body.name,
-    screenName: req.body.screenId,
+    screenId: req.body.screenId,
     password
   });
 
@@ -28,7 +28,7 @@ router.post("/login", async (req, res) => {
   const isCorrect =
     user !== undefined &&
     (await comparePassword(req.body.password, user.password));
-  if (isCorrect) {
+  if (!isCorrect) {
     res.status(401).send({
       error: "incorrect credential"
     });
