@@ -6,13 +6,7 @@ const auth = require("../middlewares/auth");
 const validate = require("../middlewares/validate");
 
 router.param("id", async (req, res, next, id) => {
-  const task = await models.Task.findByPk(id, {
-    include: [
-      { model: models.Tag, as: "tags" },
-      { model: models.User, as: "author" },
-      { model: models.User, as: "assignee" }
-    ]
-  });
+  const task = await models.Task.findByPk(id);
 
   if (task === undefined) {
     res.status(404).send({
@@ -41,12 +35,7 @@ router.get(
   async (req, res) => {
     const tasks = await models.Task.findAll({
       limit: req.query.limit,
-      order: [["updatedAt", "desc"]],
-      include: [
-        { model: models.Tag, as: "tags" },
-        { model: models.User, as: "author" },
-        { model: models.User, as: "assignee" }
-      ]
+      order: [["updatedAt", "desc"]]
     });
 
     res.send(tasks);
@@ -67,29 +56,28 @@ router.post(
       assigneeId: yup
         .number()
         .positive()
-        .integer()
-        .required(),
+        .integer(),
       name: yup.string().required()
     }
   }),
   async (req, res) => {
     // TODO: add transaction
-    const task = await models.Task.create({
-      assigneeId: req.body.assigneeId,
-      authorId: req.me.id,
-      name: req.body.name
+    const task = await models.sequelize.transaction(async transaction => {
+      const task = await models.Task.create(
+        {
+          assigneeId: req.body.assigneeId,
+          authorId: req.me.id,
+          name: req.body.name
+        },
+        { transaction }
+      );
+
+      // nested create supports only full creates
+      await task.setTags(req.body.tags, { transaction });
+      return task;
     });
 
-    // nested create supports only full creates
-    await task.setTags(req.body.tags);
-    await task.reload({
-      include: [
-        { model: models.Tag, as: "tags" },
-        { model: models.User, as: "author" },
-        { model: models.User, as: "assignee" }
-      ]
-    });
-
+    await task.reload();
     res.send(task);
   }
 );

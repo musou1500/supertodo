@@ -22,6 +22,24 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "taskId",
       as: "tags"
     });
+
+    models.Task.addScope(
+      "defaultScope",
+      {
+        include: [
+          {
+            model: models.Tag,
+            as: "tags",
+            through: {
+              attributes: []
+            }
+          },
+          { model: models.User, as: "author" },
+          { model: models.User, as: "assignee" }
+        ]
+      },
+      { override: true }
+    );
   };
   return Task;
 };
