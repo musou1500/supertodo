@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     models.Task.belongsToMany(models.Tag, {
-      through: models.Tag,
+      through: "TaskTags",
       foreignKey: "taskId"
     });
   };
