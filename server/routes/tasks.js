@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/auth");
 
-router.param("id", (req, res, next, id) => {
+router.param("id", async (req, res, next, id) => {
   const task = await models.Task.findByPk(id, {
     include: [
       models.Tag,

@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/auth");
 
-router.param("screenId", (req, res, next, screenId) => {
+router.param("screenId", async (req, res, next, screenId) => {
   const user = await models.User.findOne({ where: { screenId } });
 
   if (user === undefined) {

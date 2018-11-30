@@ -8,7 +8,7 @@ const router = express.Router();
 const hashPassword = util.promisify(bcrypt.hash);
 const comparePassword = util.promisify(bcrypt.compare);
 
-router.post("/signup", (req, res) => {
+router.post("/signup", async (req, res) => {
   const saltRounds = parseInt(process.env.SALT_ROUNDS);
   const password = bcrypt.hash(req.body.password, saltRounds);
   const user = await models.User.create({
@@ -20,7 +20,7 @@ router.post("/signup", (req, res) => {
   res.send(user);
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   const user = await models.User.findOne({
     where: { screenId: req.body.screenId }
   });
