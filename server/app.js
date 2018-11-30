@@ -1,18 +1,15 @@
 const express = require("express");
-const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
+const bearerToken = require("express-bearer-token");
 
-const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
 
 var app = express();
 
 app.use(logger("dev"));
+app.use(bearerToken());
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
 
 module.exports = app;
