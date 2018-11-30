@@ -8,7 +8,7 @@ const validate = require("../middlewares/validate");
 router.param("id", async (req, res, next, id) => {
   const task = await models.Task.findByPk(id, {
     include: [
-      models.Tag,
+      { model: models.Tag, as: "tags" },
       { model: models.User, as: "author" },
       { model: models.User, as: "assignee" }
     ]
@@ -43,7 +43,7 @@ router.get(
       limit: req.query.limit,
       order: [["updatedAt", "desc"]],
       include: [
-        models.Tag,
+        { model: models.Tag, as: "tags" },
         { model: models.User, as: "author" },
         { model: models.User, as: "assignee" }
       ]
@@ -66,11 +66,6 @@ router.post(
             .required()
         })
       ),
-      authorId: yup
-        .number()
-        .positive()
-        .integer()
-        .required(),
       assigneeId: yup
         .number()
         .positive()
@@ -80,21 +75,22 @@ router.post(
     }
   }),
   async (req, res) => {
-    const task = await models.Task.create(
-      {
-        assigneeId: req.body.assigneeId,
-        authorId: req.body.authorId,
-        name: req.body.name,
-        tags: req.body.tags
-      },
-      {
-        include: [
-          models.Tag,
-          { model: models.User, as: "author" },
-          { model: models.User, as: "assignee" }
-        ]
-      }
-    );
+    // TODO: add transaction
+    const task = await models.Task.create({
+      assigneeId: req.body.assigneeId,
+      authorId: req.me.id,
+      name: req.body.name
+    });
+
+    // nested create supports only full creates
+    await task.setTags(req.body.tags.map(t => t.id));
+    await task.reload({
+      include: [
+        { model: models.Tag, as: "tags" },
+        { model: models.User, as: "author" },
+        { model: models.User, as: "assignee" }
+      ]
+    });
 
     res.send(task);
   }
