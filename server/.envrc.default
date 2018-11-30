@@ -1,0 +1,3 @@
+# export JWT_SECRET=
+# export PORT=
+# export SALT_ROUNDS=
