@@ -3,6 +3,7 @@ const models = require("../models");
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const auth = require("../middlewares/auth");
 const router = express.Router();
 
 const hashPassword = util.promisify(bcrypt.hash);
@@ -17,6 +18,13 @@ router.post("/signup", async (req, res) => {
     password
   });
 
+  res.send(user);
+});
+
+router.get("/me", auth(), async (req, res) => {
+  const user = await models.User.findOne({
+    where: { screenId: req.me.screenId }
+  });
   res.send(user);
 });
 
