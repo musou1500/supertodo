@@ -58,13 +58,11 @@ router.post(
   validate({
     body: {
       tags: yup.array().of(
-        yup.object().shape({
-          id: yup
-            .number()
-            .positive()
-            .integer()
-            .required()
-        })
+        yup
+          .number()
+          .positive()
+          .integer()
+          .required()
       ),
       assigneeId: yup
         .number()
@@ -83,7 +81,7 @@ router.post(
     });
 
     // nested create supports only full creates
-    await task.setTags(req.body.tags.map(t => t.id));
+    await task.setTags(req.body.tags);
     await task.reload({
       include: [
         { model: models.Tag, as: "tags" },
