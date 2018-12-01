@@ -1,17 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-
-export interface Tag {
-  id: number;
-  name: string;
-  color?: string;
-}
-
-export interface NewTag {
-  name: string;
-  color?: string;
-}
+import { Tag, NewTag } from './models';
 
 @Injectable({
   providedIn: 'root'

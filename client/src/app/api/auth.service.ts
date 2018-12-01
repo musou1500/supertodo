@@ -1,23 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { User } from './user.service';
-
-export interface SignupData {
-  name: string;
-  screenId: string;
-  password: string;
-}
-
-export interface LoginResult {
-  token: string;
-  user: User;
-}
-
-export interface Credential {
-  screenId: string;
-  password: string;
-}
+import { User, SignupData, Credential, LoginResult } from './models';
 
 @Injectable({
   providedIn: 'root'

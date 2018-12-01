@@ -1,21 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { User } from './user.service';
-import { Tag } from './tag.service';
-
-export interface Task {
-  id: number;
-  name: string;
-  tags: Tag[];
-  assignee: User | null;
-  author: User | null;
-}
-export interface NewTask {
-  name: string;
-  tags?: number[];
-  assigneeId?: number;
-}
+import { NewTask, Task } from './models';
 
 @Injectable({
   providedIn: 'root'
