@@ -11,14 +11,16 @@ export class TaskService {
 
   findAll(opts: PaginateOptions) {
     const params = new HttpParams({ fromObject: opts as any });
-    this.client.get<Task[]>(`${environment.apiBaseUrl}/tasks`, { params });
+    return this.client.get<Task[]>(`${environment.apiBaseUrl}/tasks`, {
+      params
+    });
   }
 
   create(data: NewTask) {
-    this.client.post<Task>(`${environment.apiBaseUrl}/tasks`, data);
+    return this.client.post<Task>(`${environment.apiBaseUrl}/tasks`, data);
   }
 
   destroy(id: number) {
-    this.client.delete<Task>(`${environment.apiBaseUrl}/tasks/${id}`);
+    return this.client.delete<Task>(`${environment.apiBaseUrl}/tasks/${id}`);
   }
 }

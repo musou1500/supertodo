@@ -10,7 +10,7 @@ export class UserService {
   constructor(private client: HttpClient) {}
 
   findById(id: number) {
-    this.client.get<User>(`${environment.apiBaseUrl}/users/${id}`);
+    return this.client.get<User>(`${environment.apiBaseUrl}/users/${id}`);
   }
 
   findAll(opts: PaginateOptions) {
@@ -18,6 +18,8 @@ export class UserService {
       fromObject: opts as any
     });
 
-    this.client.get<User[]>(`${environment.apiBaseUrl}/users/`, { params });
+    return this.client.get<User[]>(`${environment.apiBaseUrl}/users/`, {
+      params
+    });
   }
 }

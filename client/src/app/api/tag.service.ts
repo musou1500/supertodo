@@ -11,14 +11,14 @@ export class TagService {
 
   findAll(opts: PaginateOptions) {
     const params = new HttpParams({ fromObject: opts as any });
-    this.client.get<Tag[]>(`${environment.apiBaseUrl}/tags`, { params });
+    return this.client.get<Tag[]>(`${environment.apiBaseUrl}/tags`, { params });
   }
 
   create(data: NewTag) {
-    this.client.post<Tag>(`${environment.apiBaseUrl}/tags`, data);
+    return this.client.post<Tag>(`${environment.apiBaseUrl}/tags`, data);
   }
 
   destroy(id: number) {
-    this.client.delete<Tag>(`${environment.apiBaseUrl}/tags/${id}`);
+    return this.client.delete<Tag>(`${environment.apiBaseUrl}/tags/${id}`);
   }
 }
