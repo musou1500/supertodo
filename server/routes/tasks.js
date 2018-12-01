@@ -63,7 +63,7 @@ router.post(
           .integer()
           .required()
       ),
-      assigneeId: yup
+      assignee: yup
         .number()
         .positive()
         .integer(),
@@ -75,7 +75,7 @@ router.post(
     const task = await models.sequelize.transaction(async transaction => {
       const task = await models.Task.create(
         {
-          assigneeId: req.body.assigneeId,
+          assigneeId: req.body.assignee,
           authorId: req.me.id,
           name: req.body.name
         },

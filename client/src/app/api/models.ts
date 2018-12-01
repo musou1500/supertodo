@@ -42,7 +42,7 @@ export interface Task {
 export interface NewTask {
   name: string;
   tags?: number[];
-  assigneeId?: number;
+  assignee?: number;
 }
 
 export interface PaginateOptions {
