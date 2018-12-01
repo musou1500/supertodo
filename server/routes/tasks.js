@@ -4,6 +4,7 @@ const yup = require("yup");
 const router = express.Router();
 const auth = require("../middlewares/auth");
 const validate = require("../middlewares/validate");
+const util = require("../util");
 
 router.param("id", async (req, res, next, id) => {
   const task = await models.Task.findByPk(id);
@@ -21,7 +22,6 @@ router.param("id", async (req, res, next, id) => {
 
 router.use(auth());
 
-// TODO: add pagination
 router.get(
   "/",
   validate({
@@ -30,15 +30,24 @@ router.get(
         .number()
         .positive()
         .integer()
-        .default(50)
+        .default(50),
+      minId: yup
+        .number()
+        .positive()
+        .integer(),
+      maxId: yup
+        .number()
+        .positive()
+        .integer()
     }
   }),
   async (req, res) => {
-    const tasks = await models.Task.findAll({
-      limit: req.query.limit,
-      order: [["updatedAt", "desc"]]
-    });
+    const opts = {
+      order: [["updatedAt", "desc"]],
+      ...util.queryToOpts(req.query)
+    };
 
+    const tasks = await models.Task.findAll(opts);
     res.send(tasks);
   }
 );

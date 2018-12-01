@@ -21,11 +21,35 @@ router.param("id", async (req, res, next, id) => {
 
 router.use(auth());
 
-// TODO: add pagination
-router.get("/", async (req, res) => {
-  const tags = await models.Tag.findAll();
-  res.send(tags);
-});
+router.get(
+  "/",
+  validate({
+    query: {
+      limit: yup
+        .number()
+        .positive()
+        .integer()
+        .default(50),
+      minId: yup
+        .number()
+        .positive()
+        .integer(),
+      maxId: yup
+        .number()
+        .positive()
+        .integer()
+    }
+  }),
+  async (req, res) => {
+    const opts = {
+      order: [["updatedAt", "desc"]],
+      ...util.queryToOpts(req.query)
+    };
+
+    const tags = await models.Tag.findAll(opts);
+    res.send(tags);
+  }
+);
 
 router.post(
   "/",
