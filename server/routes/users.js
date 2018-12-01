@@ -21,6 +21,12 @@ router.param("screenId", async (req, res, next, screenId) => {
 
 router.use(auth());
 
+// TODO: add pagination
+router.get("/", async (req, res) => {
+  const users = await models.User.findAll();
+  res.send(users);
+});
+
 router.get("/:screenId", async (req, res) => res.send(req.user));
 
 module.exports = router;
