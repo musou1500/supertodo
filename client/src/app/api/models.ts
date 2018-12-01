@@ -44,3 +44,9 @@ export interface NewTask {
   tags?: number[];
   assigneeId?: number;
 }
+
+export interface PaginateOptions {
+  limit?: number;
+  minId?: number;
+  maxId?: number;
+}

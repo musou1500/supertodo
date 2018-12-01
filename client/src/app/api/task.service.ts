@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { NewTask, Task } from './models';
+import { NewTask, Task, PaginateOptions } from './models';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +9,9 @@ import { NewTask, Task } from './models';
 export class TaskService {
   constructor(private client: HttpClient) {}
 
-  findAll() {
-    this.client.get<Task[]>(`${environment.apiBaseUrl}/tasks`);
+  findAll(opts: PaginateOptions) {
+    const params = new HttpParams({ fromObject: opts as any });
+    this.client.get<Task[]>(`${environment.apiBaseUrl}/tasks`, { params });
   }
 
   create(data: NewTask) {

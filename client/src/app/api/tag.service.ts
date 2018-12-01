@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Tag, NewTag } from './models';
+import { Tag, NewTag, PaginateOptions } from './models';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +9,9 @@ import { Tag, NewTag } from './models';
 export class TagService {
   constructor(private client: HttpClient) {}
 
-  findAll() {
-    this.client.get<Tag[]>(`${environment.apiBaseUrl}/tags`);
+  findAll(opts: PaginateOptions) {
+    const params = new HttpParams({ fromObject: opts as any });
+    this.client.get<Tag[]>(`${environment.apiBaseUrl}/tags`, { params });
   }
 
   create(data: NewTag) {

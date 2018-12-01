@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { User } from './models';
+import { User, PaginateOptions } from './models';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,14 @@ export class UserService {
   constructor(private client: HttpClient) {}
 
   findById(id: number) {
-    this.client.get<User[]>(`${environment.apiBaseUrl}/users/${id}`);
+    this.client.get<User>(`${environment.apiBaseUrl}/users/${id}`);
+  }
+
+  findAll(opts: PaginateOptions) {
+    const params = new HttpParams({
+      fromObject: opts as any
+    });
+
+    this.client.get<User[]>(`${environment.apiBaseUrl}/users/`, { params });
   }
 }
