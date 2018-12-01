@@ -21,6 +21,7 @@ router.param("id", async (req, res, next, id) => {
 
 router.use(auth());
 
+// TODO: add pagination
 router.get("/", async (req, res) => {
   const tags = await models.Tag.findAll();
   res.send(tags);

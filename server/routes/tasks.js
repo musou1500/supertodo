@@ -21,6 +21,7 @@ router.param("id", async (req, res, next, id) => {
 
 router.use(auth());
 
+// TODO: add pagination
 router.get(
   "/",
   validate({
