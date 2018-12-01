@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors')
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const bearerToken = require("express-bearer-token");
@@ -12,6 +13,7 @@ const usersRouter = require("./routes/users");
 var app = express();
 
 app.use(logger("dev"));
+app.use(cors());
 app.use(bearerToken());
 app.use(express.json());
 app.use(cookieParser());
